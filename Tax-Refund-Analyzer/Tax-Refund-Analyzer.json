@@ -1,0 +1,1219 @@
+{
+  "name": "Tax Refund Project",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a27ed3a-4f23-4aca-8ae8-7528e6aad938",
+              "name": "tax_year",
+              "value": "={{ $json.content.parts[0].text.parseJson().tax_year}}",
+              "type": "string"
+            },
+            {
+              "id": "9df474fa-3675-4fd7-ba13-63c0be5f6ae5",
+              "name": "gross_income",
+              "value": "={{ $json.content.parts[0].text.parseJson().gross_income}}",
+              "type": "number"
+            },
+            {
+              "id": "ec4f7901-b9da-4148-a5f0-ea9a4131f275",
+              "name": "credit_points",
+              "value": "={{ $json.content.parts[0].text.parseJson().credit_points}}",
+              "type": "number"
+            },
+            {
+              "id": "c33a921f-151b-45d0-aeb3-91498375e758",
+              "name": "tax_paid",
+              "value": "={{ $json.content.parts[0].text.parseJson().tax_paid}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        576
+      ],
+      "id": "20c1d269-4a7f-47b5-91b6-5d31c98540ff",
+      "name": "Data from Form 106"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0365cebb-a036-43e4-a212-076481c1ff64",
+              "name": "calculated_tax",
+              "value": "={{ Math.max(0, $json.tax_calculation - $json.tax_credits )}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        544
+      ],
+      "id": "509fffcc-f984-4ed1-a85a-51be15b09c2e",
+      "name": "Calculated Tax"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b505e4f7-5103-427d-b84d-9524dd5cf99b",
+              "name": "tax_refund",
+              "value": "={{ Math.max(0, $('Split by Year').item.json.tax_paid - $json.calculated_tax )}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        544
+      ],
+      "id": "1e75066d-9def-4d30-a411-d04bbb9b5a4b",
+      "name": "Tax Refund"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Tax paid: {{ $('Split by Year').item.json.tax_paid }}\nCalculated tax: {{ $('Calculated Tax').item.json.calculated_tax }}\nTax refund: {{ $json.tax_refund }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        544
+      ],
+      "id": "01ea9f0d-0edd-4e7e-8214-afe259a53d2c",
+      "name": "text message- tax refund",
+      "webhookId": "a3dbe6b2-804a-4715-a72a-5ab7b0c7de5e",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LjbZIgpr4kGceh8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a65875c8-da22-4d8f-8100-e72bf85cb8d1",
+              "name": "a",
+              "value": 84120,
+              "type": "number"
+            },
+            {
+              "id": "4db489ad-decf-4ffa-baa8-940bbb02af5c",
+              "name": "b",
+              "value": 120720,
+              "type": "number"
+            },
+            {
+              "id": "92f85b83-0d61-4288-bb70-83fec2f316f0",
+              "name": "c",
+              "value": 193800,
+              "type": "number"
+            },
+            {
+              "id": "dfa0acaf-7a9b-4048-80fd-1d2359e2c109",
+              "name": "d",
+              "value": 269280,
+              "type": "number"
+            },
+            {
+              "id": "d1d500af-5536-4a5c-a377-411feb831478",
+              "name": "e",
+              "value": 560280,
+              "type": "number"
+            },
+            {
+              "id": "8f1fbef3-d6ac-44e6-b42e-2fc814bebdfd",
+              "name": "f",
+              "value": 721560,
+              "type": "number"
+            },
+            {
+              "id": "2abb3a2c-c17a-421d-b049-a5b1f6ae0a1b",
+              "name": "credit_point_value",
+              "value": 2904,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        96
+      ],
+      "id": "00295906-cf62-4af1-aaa1-5796e6d07dcb",
+      "name": "Tax Step Variables 2024-2025"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a65875c8-da22-4d8f-8100-e72bf85cb8d1",
+              "name": "a",
+              "value": 81480,
+              "type": "number"
+            },
+            {
+              "id": "4db489ad-decf-4ffa-baa8-940bbb02af5c",
+              "name": "b",
+              "value": 116760,
+              "type": "number"
+            },
+            {
+              "id": "92f85b83-0d61-4288-bb70-83fec2f316f0",
+              "name": "c",
+              "value": 187440,
+              "type": "number"
+            },
+            {
+              "id": "dfa0acaf-7a9b-4048-80fd-1d2359e2c109",
+              "name": "d",
+              "value": 260520,
+              "type": "number"
+            },
+            {
+              "id": "d1d500af-5536-4a5c-a377-411feb831478",
+              "name": "e",
+              "value": 542160,
+              "type": "number"
+            },
+            {
+              "id": "8f1fbef3-d6ac-44e6-b42e-2fc814bebdfd",
+              "name": "f",
+              "value": 698280,
+              "type": "number"
+            },
+            {
+              "id": "d52bda8c-4d39-4ca0-abb8-f285e1108f82",
+              "name": "credit_point_value",
+              "value": 2820,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        288
+      ],
+      "id": "1f1272e2-8b2a-4d4a-98b5-af301c3b6384",
+      "name": "Tax Step Variables 2023"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a65875c8-da22-4d8f-8100-e72bf85cb8d1",
+              "name": "a",
+              "value": 77400,
+              "type": "number"
+            },
+            {
+              "id": "4db489ad-decf-4ffa-baa8-940bbb02af5c",
+              "name": "b",
+              "value": 110880,
+              "type": "number"
+            },
+            {
+              "id": "92f85b83-0d61-4288-bb70-83fec2f316f0",
+              "name": "c",
+              "value": 178080,
+              "type": "number"
+            },
+            {
+              "id": "dfa0acaf-7a9b-4048-80fd-1d2359e2c109",
+              "name": "d",
+              "value": 247440,
+              "type": "number"
+            },
+            {
+              "id": "d1d500af-5536-4a5c-a377-411feb831478",
+              "name": "e",
+              "value": 514920,
+              "type": "number"
+            },
+            {
+              "id": "8f1fbef3-d6ac-44e6-b42e-2fc814bebdfd",
+              "name": "f",
+              "value": 663240,
+              "type": "number"
+            },
+            {
+              "id": "3e6285b0-321f-45a5-a56d-f40db2395734",
+              "name": "credit_point_value",
+              "value": 2676,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        464
+      ],
+      "id": "12581633-c0de-4736-9fae-54b1189ad712",
+      "name": "Tax Step Variables 2022"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a65875c8-da22-4d8f-8100-e72bf85cb8d1",
+              "name": "a",
+              "value": 75480,
+              "type": "number"
+            },
+            {
+              "id": "4db489ad-decf-4ffa-baa8-940bbb02af5c",
+              "name": "b",
+              "value": 108360,
+              "type": "number"
+            },
+            {
+              "id": "92f85b83-0d61-4288-bb70-83fec2f316f0",
+              "name": "c",
+              "value": 173880,
+              "type": "number"
+            },
+            {
+              "id": "dfa0acaf-7a9b-4048-80fd-1d2359e2c109",
+              "name": "d",
+              "value": 241680,
+              "type": "number"
+            },
+            {
+              "id": "d1d500af-5536-4a5c-a377-411feb831478",
+              "name": "e",
+              "value": 502920,
+              "type": "number"
+            },
+            {
+              "id": "8f1fbef3-d6ac-44e6-b42e-2fc814bebdfd",
+              "name": "f",
+              "value": 647640,
+              "type": "number"
+            },
+            {
+              "id": "0524d645-44ba-4261-b3b8-37dbda86e2f2",
+              "name": "credit_point_value",
+              "value": "2616",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        624
+      ],
+      "id": "085ab1da-4daf-43e9-9bf0-808defdf40c5",
+      "name": "Tax Step Variables 2021"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a65875c8-da22-4d8f-8100-e72bf85cb8d1",
+              "name": "a",
+              "value": 75960,
+              "type": "number"
+            },
+            {
+              "id": "4db489ad-decf-4ffa-baa8-940bbb02af5c",
+              "name": "b",
+              "value": 108960,
+              "type": "number"
+            },
+            {
+              "id": "92f85b83-0d61-4288-bb70-83fec2f316f0",
+              "name": "c",
+              "value": 174960,
+              "type": "number"
+            },
+            {
+              "id": "dfa0acaf-7a9b-4048-80fd-1d2359e2c109",
+              "name": "d",
+              "value": 243120,
+              "type": "number"
+            },
+            {
+              "id": "d1d500af-5536-4a5c-a377-411feb831478",
+              "name": "e",
+              "value": 505920,
+              "type": "number"
+            },
+            {
+              "id": "8f1fbef3-d6ac-44e6-b42e-2fc814bebdfd",
+              "name": "f",
+              "value": 651600,
+              "type": "number"
+            },
+            {
+              "id": "a59f62d2-a814-4b25-9fc3-e35506175c6b",
+              "name": "credit_point_value",
+              "value": "2628",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        768
+      ],
+      "id": "4ca52cd3-b9d7-4bb6-aaf7-a518924fb940",
+      "name": "Tax Step Variables 2020"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Tax refund unavailable for the selected year - {{ $('Split by Year').item.json.tax_year }}. Refunds can only be claimed for the past 6 years. Please upload a form from the years 2020-2025.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        992
+      ],
+      "id": "e0a60d6a-8907-46a7-8831-670a3d7133bf",
+      "name": "Text Message- Invalid Year",
+      "webhookId": "a3dbe6b2-804a-4715-a72a-5ab7b0c7de5e",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LjbZIgpr4kGceh8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Data from Form 106').item.json.tax_year }}",
+                    "rightValue": "=2024|2025",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    },
+                    "id": "af59472b-a7d8-4f99-9458-0699149d7b64"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "2024-2025"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c3e9a000-dfc5-410f-8449-5fc6a86bcd95",
+                    "leftValue": "={{ $('Data from Form 106').item.json.tax_year }}",
+                    "rightValue": "2023",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "=2023"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e650c073-a5ec-4687-ab5a-c009f7ca94f1",
+                    "leftValue": "={{ $('Data from Form 106').item.json.tax_year }}",
+                    "rightValue": "2022",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "2022"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b3c7bc71-1a43-4bf7-9dd9-35d0ce04e04c",
+                    "leftValue": "={{ $('Data from Form 106').item.json.tax_year }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "=2021"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "203a74fe-2681-42d9-a271-1a9529773e47",
+                    "leftValue": "={{ $('Data from Form 106').item.json.tax_year }}",
+                    "rightValue": "2020",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "2020"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "other years"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        480
+      ],
+      "id": "8a0a865b-2c16-47ed-ab3e-a91eae56f0a3",
+      "name": "Split by Year"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2352,
+        576
+      ],
+      "id": "942b8ae3-fcde-49ef-b228-6914d0fca48c",
+      "name": "Telegram Trigger",
+      "webhookId": "3982b6dd-3565-4e7e-b0df-f85a7eae4970",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LjbZIgpr4kGceh8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.document.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2128,
+        576
+      ],
+      "id": "b8cc7127-10fb-4196-a5a5-3f1962bedfda",
+      "name": "Get a file - PDF Upload",
+      "webhookId": "efddcc30-7c9e-4ac1-9dfd-92c2c94a8718",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LjbZIgpr4kGceh8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.telegram.org/file/bot8566943202:AAE5ZNQoP8PcfA3HRLXCy4G0Ubgo0Uo7_Ik/' + $json.result.file_path }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1904,
+        576
+      ],
+      "id": "18d0159d-0a35-4232-8ffe-ac53c004bae7",
+      "name": "HTTP Request - Get PDF"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1696,
+        576
+      ],
+      "id": "779eee67-5dcd-46d8-b0b5-251c9b4f36f7",
+      "name": "Extract from File - PDF to Binary"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f35de53c-647f-43c0-a9f8-bf7a78027a5f",
+              "leftValue": "={{ $('Data from Form 106').item.json.credit_points }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -352,
+        576
+      ],
+      "id": "6c5772aa-0f78-4907-8120-9cafaa32ae62",
+      "name": "Tax Credit Points Validation"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=We noticed a negative value in the tax credit points section. Please review the uploaded form and try again.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        768
+      ],
+      "id": "99d1762d-48de-467c-90ba-3a7ef6593f39",
+      "name": "Text Message- Negative Credit Points",
+      "webhookId": "a3dbe6b2-804a-4715-a72a-5ab7b0c7de5e",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LjbZIgpr4kGceh8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=For negative income, you are eligible for a tax refund of the full amount paid : {{ $json.tax_paid }}. If your income is positive, please upload a corrected Form 106. Additional refunds for negative income can be claimed for the past 6 years; however, this system does not support multi-year processing in a single check.\"",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        816
+      ],
+      "id": "e30405c5-f233-4fdb-a1d5-2f5cfde7b30f",
+      "name": "Text Message- Negative Income",
+      "webhookId": "a3dbe6b2-804a-4715-a72a-5ab7b0c7de5e",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LjbZIgpr4kGceh8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "253e2ac9-2a3c-4d51-ab81-594c94ee3e2e",
+              "leftValue": "={{ $('Data from Form 106').item.json.gross_income }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        560
+      ],
+      "id": "4f04d6bd-c162-41f6-aaae-6f5d4ff34b60",
+      "name": "Income Validation"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "add6e8a1-808a-425b-a75f-1a97e762adbe",
+              "name": "tax_calculation",
+              "value": "={{ \n (Math.min($('Income Validation').item.json.gross_income, $json.a) * 0.10) + \n\n (Math.max(0, Math.min($('Income Validation').item.json.gross_income, $json.b) - $json.a ) * 0.14) + \n\n (Math.max(0, Math.min($('Income Validation').item.json.gross_income, $json.c) - $json.b) * 0.20) + \n\n (Math.max(0, Math.min($('Income Validation').item.json.gross_income, $json.d) - $json.c) * 0.31) + \n\n (Math.max(0, Math.min($('Income Validation').item.json.gross_income, $json.e) - $json.d) * 0.35) + \n\n (Math.max(0, Math.min($('Income Validation').item.json.gross_income, $json.f) - $json.e) * 0.47) + \n\n (Math.max(0, $('Income Validation').item.json.gross_income - $json.f) * 0.5)\n}}",
+              "type": "number"
+            },
+            {
+              "id": "537bbf99-4b21-4388-9c3c-19db3a9244cb",
+              "name": "tax_credits",
+              "value": "={{$('Data from Form 106').item.json.credit_points*$json.credit_point_value }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        544
+      ],
+      "id": "6e035da5-e918-405e-a799-0d5abc2c8aaf",
+      "name": "Basic Tax Calculation"
+    },
+    {
+      "parameters": {
+        "operation": "checkIfEvaluating"
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -1152,
+        576
+      ],
+      "id": "3c228ce9-a950-42ec-9fc4-c0c283269e4d",
+      "name": "Evaluation"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "InpQagd5TNhMKKJN",
+          "mode": "list",
+          "cachedResultName": "tests for tax workflow",
+          "cachedResultUrl": "/projects/aMZ9HnCzr67HHPJe/datatables/InpQagd5TNhMKKJN"
+        }
+      },
+      "type": "n8n-nodes-base.evaluationTrigger",
+      "typeVersion": 4.7,
+      "position": [
+        -1904,
+        272
+      ],
+      "id": "92625a42-2f7e-4cde-94c0-a7264a1b30c3",
+      "name": "When fetching a dataset row"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1a7f33b9-b80d-412e-b6f4-c1396cb10921",
+              "name": "input",
+              "value": "={{ $json.input }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1696,
+        272
+      ],
+      "id": "d918cfba-46a4-44c6-8eeb-042d397238f0",
+      "name": "Input Data"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-robotics-er-1.5-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        432
+      ],
+      "id": "33ef1777-01f0-41c1-8e99-539fec696086",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "WSZoMvMK7AZiXryT",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "expectedAnswer": "={{ $('Message a model - Document Extraction').item.json.content.parts[0].text }}",
+        "actualAnswer": "=Reference Data (Ground Truth): { \"tax_year\": \"{{ $('When fetching a dataset row').item.json.tax_year }}\", \"gross_income\": \"{{ $('When fetching a dataset row').item.json.gross_income }}\", \"credit_points\": \"{{ $('When fetching a dataset row').item.json.credit_points }}\", \"tax_paid\": \"{{ $('When fetching a dataset row').item.json.tax_paid }}\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -912,
+        272
+      ],
+      "id": "176c1a65-74c1-41ad-a2f4-a1df01e8e432",
+      "name": "Evaluation - Metrics"
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=INPUT TEXT:\n{{ $json.text || $json.input }}\n\nאנא נתח את הטקסט המצורף מטופס 106 והחזר אך ורק אובייקט JSON תקין. אין להוסיף הסברים, הערות, או סימני Markdown (כמו ```json). חלץ את הערכים הבאים (בערכים מספריים בלבד):\nאם אתה לא מוצא את הערך, תחזיר שהוא חסר.\ntax_year (שנת המס)\ngross_income (סה\"כ הכנסות - חפש קוד 158 או 172)\ncredit_points (סה\"כ נקודות זיכוי - חפש קוד 022)\ntax_paid (סה\"כ מס הכנסה ששולם - חפש קוד 042)\nפורמט הפלט חייב להיות בדיוק כך: {\"tax_year\": 2024, \"gross_income\": 100000, \"credit_points\": 2.25, \"tax_paid\": 5000}\n\nשים לב שהקובץ בעברית, יש לקרוא את שורת הכותרת מימין לשמאל, אך את המספר יש לקרוא משמאל לימין.\nנא לא להפוך את המספרים של שנת המס.\n\nנא לקחת את הערכים על סימנם המקורי. אם הערך שלילי, יש להשאיר אותו שלילי ולא לתקן את הסימן.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1488,
+        576
+      ],
+      "id": "bc0d5941-c303-4b7d-a86d-b99216f0c536",
+      "name": "Message a model - Document Extraction",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ARq5yaAs5GuuOwiF",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Data from Form 106": {
+      "main": [
+        [
+          {
+            "node": "Tax Credit Points Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculated Tax": {
+      "main": [
+        [
+          {
+            "node": "Tax Refund",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Refund": {
+      "main": [
+        [
+          {
+            "node": "text message- tax refund",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Step Variables 2024-2025": {
+      "main": [
+        [
+          {
+            "node": "Basic Tax Calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Step Variables 2023": {
+      "main": [
+        [
+          {
+            "node": "Basic Tax Calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Step Variables 2022": {
+      "main": [
+        [
+          {
+            "node": "Basic Tax Calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Step Variables 2021": {
+      "main": [
+        [
+          {
+            "node": "Basic Tax Calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Step Variables 2020": {
+      "main": [
+        [
+          {
+            "node": "Basic Tax Calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split by Year": {
+      "main": [
+        [
+          {
+            "node": "Tax Step Variables 2024-2025",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tax Step Variables 2023",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tax Step Variables 2022",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tax Step Variables 2021",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tax Step Variables 2020",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Message- Invalid Year",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file - PDF Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file - PDF Upload": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Get PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Get PDF": {
+      "main": [
+        [
+          {
+            "node": "Extract from File - PDF to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File - PDF to Binary": {
+      "main": [
+        [
+          {
+            "node": "Message a model - Document Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tax Credit Points Validation": {
+      "main": [
+        [
+          {
+            "node": "Income Validation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Message- Negative Credit Points",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Income Validation": {
+      "main": [
+        [
+          {
+            "node": "Split by Year",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Message- Negative Income",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic Tax Calculation": {
+      "main": [
+        [
+          {
+            "node": "Calculated Tax",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation": {
+      "main": [
+        [
+          {
+            "node": "Evaluation - Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data from Form 106",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When fetching a dataset row": {
+      "main": [
+        [
+          {
+            "node": "Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data": {
+      "main": [
+        [
+          {
+            "node": "Message a model - Document Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Evaluation - Metrics",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation - Metrics": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model - Document Extraction": {
+      "main": [
+        [
+          {
+            "node": "Evaluation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "df21c354-a13c-43a1-a7b9-03f06ccec92c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d297f61b2a5895ef47d9551f06e82752e45977d6d213d2e864401749d071f5f6"
+  },
+  "id": "oiVjgxbVURitaVNLQDF3D",
+  "tags": []
+}

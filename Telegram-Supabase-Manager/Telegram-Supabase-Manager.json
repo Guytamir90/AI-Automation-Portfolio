@@ -1,0 +1,2286 @@
+{
+  "name": "supabase bot telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "67ba8caf-cec5-498a-889c-dd86d6d49b64"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Add a new task"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c2763bcb-cbaf-4ff9-992f-2fa879472c74",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mark a task as completed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "da69d64a-d987-4c86-a42e-455a056b5908",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Show a list of all the user's open tasks"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        1600
+      ],
+      "id": "633446bc-48fb-4f3f-a97a-25fc18b8c413",
+      "name": "User selection of the action to perform1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1184,
+        608
+      ],
+      "id": "a8347a44-8452-477a-8b2c-9d791c460b57",
+      "name": "Telegram Trigger",
+      "webhookId": "b8812007-cb9f-46b1-a9f3-021ceb3dd33e",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "Status"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        608
+      ],
+      "id": "0eb725f4-1f2f-409a-a67a-75cf41fabb71",
+      "name": "Get many rows- status table",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3a5668cc-b1ef-4fb2-bb05-decf40d3f19c",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "={{ null }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "9b9c6c98-107e-47e0-badd-d5722fb32065",
+              "leftValue": "={{ $json.Description }}",
+              "rightValue": "=First message",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -768,
+        608
+      ],
+      "id": "1ba1c213-4979-4fea-b0c2-f15013118f81",
+      "name": "If this is the first message"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "=First message"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "Used"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        352
+      ],
+      "id": "2b82c215-db2d-431d-84f7-6a82a87d4f3f",
+      "name": "Update status to used for first message",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json[\"Message returned\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        352
+      ],
+      "id": "3d9364e6-908f-455c-928d-ae3d6b11fb60",
+      "name": "Send an opening message",
+      "webhookId": "4393bfba-85b6-4dca-96d8-74c7fd931b5d",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fc767679-a3f5-4aca-ae68-c14620ba6076",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "In progress",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -416,
+        704
+      ],
+      "id": "434fa9cd-9d04-4571-8c35-1241e5e644e2",
+      "name": "Is there a task in progress"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get many rows- status table').item.json.Description }}",
+                    "rightValue": "Create a task description",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "67ba8caf-cec5-498a-889c-dd86d6d49b64"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Add a new task"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c2763bcb-cbaf-4ff9-992f-2fa879472c74",
+                    "leftValue": "={{ $('Get many rows- status table').item.json.Description }}",
+                    "rightValue": "Create a deadline for the task",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mark a task as completed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "da69d64a-d987-4c86-a42e-455a056b5908",
+                    "leftValue": "={{ $('Get many rows- status table').item.json.Description }}",
+                    "rightValue": "Create a task completion status",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Show a list of all the user's open tasks"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "71e72860-8902-40f6-9a87-8eb4d0331adc",
+                    "leftValue": "={{ $json.Description }}",
+                    "rightValue": "Change task status",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Select a task to change its status"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9e5ee067-50a6-4733-bdd2-423263a14602",
+                    "leftValue": "={{ $json.Description }}",
+                    "rightValue": "Choose a new status",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Update Status"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        448
+      ],
+      "id": "73ca404a-0788-4290-abf8-583650107250",
+      "name": "User selection of the action to perform"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "428f1f50-e48d-475f-8813-6242bd605014",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        304,
+        1632
+      ],
+      "id": "a0a51a12-15db-4e1c-bf8e-8cbfbd9d8789",
+      "name": "Check that there are no other steps in progress"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "48d8655b-5224-457b-986c-a3820ba23be4",
+              "leftValue": "={{ $json.Description }}",
+              "rightValue": "Create a task description",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1376,
+        1440
+      ],
+      "id": "922c9f13-9dc0-4a22-934b-e17a2ba7e74f",
+      "name": "Filter for step: Create a task description"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dded22aa-00a1-457b-ae44-234e515be5a4",
+              "leftValue": "={{ $json.Description }}",
+              "rightValue": "Change task status",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1376,
+        1616
+      ],
+      "id": "e2315948-9fc7-4b88-8da7-d6b47bf8037e",
+      "name": "Filter for step: Change task status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e3055efb-c59c-4f9c-ae69-a636faeb746a",
+              "leftValue": "={{ $json.Description }}",
+              "rightValue": "=First message",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1376,
+        1808
+      ],
+      "id": "40bbb8b9-3f6f-4e28-9ee1-d2ceffee4fb5",
+      "name": "Filter for any step"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e3055efb-c59c-4f9c-ae69-a636faeb746a",
+              "leftValue": "={{ $json.Description }}",
+              "rightValue": "=First message",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1376,
+        2000
+      ],
+      "id": "f5d7571a-143f-4820-a239-224d887b13ea",
+      "name": "Filter for any step1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Create a task description"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "In progress"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1440
+      ],
+      "id": "cd1a156f-412d-473e-a962-3ed86a4351f7",
+      "name": "Update status step \"Create a task description\" to \"In progress\"",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Change task status"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "=In progress"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        1616
+      ],
+      "id": "e90aa700-f6da-4aea-b440-0bfc1847bc70",
+      "name": "Update status step \"Change task status\" to \"In progress\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "Used"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3424,
+        1648
+      ],
+      "id": "c4c7121e-008c-4c0c-b8cb-42169218326e",
+      "name": "Update status step \"First message\" to \"null\"",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Create a task description"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        208
+      ],
+      "id": "f8061a64-d285-4c0c-a437-a04c3ea96da7",
+      "name": "Update status step \"Create a task description\" to \"null\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Create a deadline for the task"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "=In progress"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        208
+      ],
+      "id": "b8a4f894-f3af-4325-97c9-db5268539522",
+      "name": "Update status step \"Create a deadline for the task\" to \"In progress\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Task management",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Deadline",
+              "condition": "is",
+              "keyValue": "={{ null }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Deadline",
+              "fieldValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        384
+      ],
+      "id": "96a01e16-24cc-45ef-a156-276f36de6811",
+      "name": "Update deadline for the task",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Create a deadline for the task"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        384
+      ],
+      "id": "3eb991b4-dc5d-4aa7-b4dc-5166573f3c5c",
+      "name": "Update status step \"Create a deadline for the task\" to \"null\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Create a task completion status"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "=In progress"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        384
+      ],
+      "id": "f12fc15e-39e9-43f8-8ab2-ef2a6b69ab8f",
+      "name": "Update status step \"Create a task completion status\" to \"In progress\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Task management",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Task execution status",
+              "condition": "is",
+              "keyValue": "={{ null }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Task execution status",
+              "fieldValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        544
+      ],
+      "id": "adacf279-7858-46e8-85cb-deeccde0a9c4",
+      "name": "Update status for a task",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Create a task completion status"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        544
+      ],
+      "id": "5f38b935-8327-46e5-bbbe-f74f9e6d1201",
+      "name": "Update status step \"Create a task completion status\" to \"null\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "Task management",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Task description",
+              "fieldValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        208
+      ],
+      "id": "51019187-d1b4-4ade-9c6f-13dd2ac7239f",
+      "name": "Create a row for a new task",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "Task management"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        736
+      ],
+      "id": "776192d3-3d9d-406a-bdbf-8b680f905461",
+      "name": "Get many rows- task management table",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Change task status"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        736
+      ],
+      "id": "01a033e8-3a9e-4163-a7bb-126f066fab4e",
+      "name": "Update status step \"Change task statuss\" to \"null\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "Choose a new status"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "=In progress"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1808,
+        736
+      ],
+      "id": "bf2d70e0-946a-40bf-b17a-de022ed9469a",
+      "name": "Update status step \"Choose a new status\" to \"In progress\"",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "In progress"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        944
+      ],
+      "id": "0139d7e1-f477-44e3-b096-41eaf30e7dac",
+      "name": "Update status  to \"null\"",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "In progress"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        1168
+      ],
+      "id": "83edb106-9726-497a-9e78-fa9f625e5d12",
+      "name": "Update to \"null\"2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json['Message returned'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1792,
+        1440
+      ],
+      "id": "9ed58134-1319-4173-9813-218e0b6fae69",
+      "name": "Send a message : please describe the task\"",
+      "webhookId": "4393bfba-85b6-4dca-96d8-74c7fd931b5d",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json['Message returned'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1664,
+        208
+      ],
+      "id": "f974f8b2-18c2-4ee8-834c-3385b48a2b15",
+      "name": "Send a message: Please select a date for the task to be completed",
+      "webhookId": "4393bfba-85b6-4dca-96d8-74c7fd931b5d",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json['Message returned'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1664,
+        384
+      ],
+      "id": "c0c765ba-8041-4e1c-9769-451c2b5ce012",
+      "name": "Send a message: Please write the task completion status (Planned, In progress, Done)",
+      "webhookId": "4393bfba-85b6-4dca-96d8-74c7fd931b5d",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=The task was created successfully",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        544
+      ],
+      "id": "400c2e6b-ebd4-4956-9f01-df09cd0989f1",
+      "name": "Send a message: The task was created successfully",
+      "webhookId": "4393bfba-85b6-4dca-96d8-74c7fd931b5d",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "Task management"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1616
+      ],
+      "id": "130f5395-8813-45e1-9bfd-fa713c16907a",
+      "name": "Get many rows- task management table1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let response = \"Select a task to change its status:\";\nlet index = 1;\n\nfor (const item of $input.all()) {\n  response += `\\n${index}. ${item.json['Task description']}`;\n  index++;\n}\n\nreturn { response_text: response };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        1616
+      ],
+      "id": "4d0ae791-a0c9-4474-8bce-c534021119c6",
+      "name": "Code in JavaScript- returns a list of tasks to select"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.response_text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2032,
+        1616
+      ],
+      "id": "d798bcc8-ed87-43a8-9b56-eb712986e972",
+      "name": "Send a message: a list of tasks to select",
+      "webhookId": "80225d3a-82ef-4264-a223-ec40efb307b9",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// קבלת המספר שהמשתמש הקליד (למשל \"2\") מהטריגר\nconst userInput = $('Telegram Trigger').first().json.message.text;\nconst selectedIndex = parseInt(userInput);\n\n// קבלת כל המשימות (Items) שהגיעו מה-Supabase\nconst allTasks = $input.all();\n\n// בדיקה אם המספר תקין וקיים ברשימה\nif (selectedIndex > 0 && selectedIndex <= allTasks.length) {\n  // שליפת המשימה הספציפית (מורידים 1 כי המערך מתחיל מ-0)\n  const task = allTasks[selectedIndex - 1].json;\n  \n  return {\n    selected_task_id: task.id,\n    selected_task_name: task['Task description'],\n    status: task['Task execution status']\n  };\n} else {\n  return { error: \"Selection out of range\" };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        736
+      ],
+      "id": "8da7adee-ee81-46b5-bbed-dc14b099bd20",
+      "name": "Code in JavaScript- Isolate the selected task"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=The task execution status is:  {{ $json.status }}\nTo change - write the new status.\nTo keep the existing status - write unchanged.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1424,
+        736
+      ],
+      "id": "e384e688-ab32-4aae-bde4-9a5c30f164ef",
+      "name": "Send a message- The task execution status",
+      "webhookId": "802b8cbd-dc2c-43f6-b758-2864716061d1",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Task management",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Task description",
+              "condition": "eq",
+              "keyValue": "={{ $('Code in JavaScript- Isolate the selected task').item.json.selected_task_name }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Updates",
+              "fieldValue": "=In progress"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1984,
+        736
+      ],
+      "id": "4d9b809b-a29d-45d3-8641-c9cdc1219687",
+      "name": "Update status step \"Choose a new status\" to \"In progress\"1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "Task management"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1808
+      ],
+      "id": "4f636bb3-f5f1-4d2b-beb8-f5aee1ab7d70",
+      "name": "Get many rows- task management table2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dded22aa-00a1-457b-ae44-234e515be5a4",
+              "leftValue": "={{ $json[\"Task execution status\"] }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1808,
+        1808
+      ],
+      "id": "ad08a29e-6c7f-4e93-997c-43afe401b173",
+      "name": "Filter: Open tasks",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "let response = \"List of open tasks:\\n\\n\";\nlet index = 1;\n\nfor (const item of $input.all()) {\n  const taskName = item.json['Task description'] || 'No Description';\n  const status = item.json['Task execution status'] || 'N/A';\n  const deadline = item.json['Deadline'] || 'No Deadline';\n\n  response += `${index}. ${taskName}\\n`;\n  response += `   Status: ${status}\\n`;\n  response += `   Deadline: ${deadline}\\n\\n`;\n  \n  index++;\n}\n\nreturn { response_text: response };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        1808
+      ],
+      "id": "e2b384e4-9af8-41c6-ad92-e095c7a6ce9b",
+      "name": "Code in JavaScript: Numbered list of open tasks"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.response_text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2208,
+        1808
+      ],
+      "id": "7a24998e-cc77-40c4-aed7-98a073421f7f",
+      "name": "Send a message: Numbered list of open tasks",
+      "webhookId": "80225d3a-82ef-4264-a223-ec40efb307b9",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=Invalid selection. Please select number 1, 2 or 3",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        2000
+      ],
+      "id": "ae41703c-84f5-414d-ab8b-0aebdff8ea8e",
+      "name": "Send a message: Invalid selection. Please select number 1, 2 or 3",
+      "webhookId": "80225d3a-82ef-4264-a223-ec40efb307b9",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=The task status has not changed",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1216,
+        944
+      ],
+      "id": "d0478ab2-6260-4481-8fa2-bc4bf409827a",
+      "name": "Send a message: The task status has not changed",
+      "webhookId": "802b8cbd-dc2c-43f6-b758-2864716061d1",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Task management",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Updates",
+              "condition": "eq",
+              "keyValue": "In progress"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Updates",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        944
+      ],
+      "id": "67e0964b-8616-4316-baf9-bbbc5aecc50a",
+      "name": "Update status step \"Change task status\" to \"null\"",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "68b05f1f-7208-480e-be03-8bcb886ac977",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "rightValue": "unchanged",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1040,
+        1104
+      ],
+      "id": "b916a98e-7fde-4de8-8a98-3c986ace906d",
+      "name": "If the task status has not changed"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Task management",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Updates",
+              "condition": "eq",
+              "keyValue": "In progress"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Task execution status",
+              "fieldValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        1168
+      ],
+      "id": "9a26ae1e-1adb-485c-9449-24ec2ab18379",
+      "name": "Update status for a task1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Task management",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Updates",
+              "condition": "eq",
+              "keyValue": "In progress"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Updates",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        1168
+      ],
+      "id": "2f2f1fa0-3994-4322-aee4-3d491aad1838",
+      "name": "Update status step \"Choose a new status\" to \"null\"",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=The updated task: \nTask description: {{ $('Update status for a task1').item.json['Task description'] }}.\nTask execution status: {{ $('Update status for a task1').item.json['Task execution status'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        1168
+      ],
+      "id": "eee80c3e-9eea-440e-8327-518edcb40dc7",
+      "name": "Send a message: The updated task",
+      "webhookId": "802b8cbd-dc2c-43f6-b758-2864716061d1",
+      "credentials": {
+        "telegramApi": {
+          "id": "F9g2eHsgg90b9hXx",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Status",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Description",
+              "condition": "eq",
+              "keyValue": "First message"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1808,
+        1168
+      ],
+      "id": "d30010b8-8705-4d28-9e14-f099696c9226",
+      "name": "Update status step \"First message\" to \"null\"1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "4laYisShomMs4igK",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "User selection of the action to perform1": {
+      "main": [
+        [
+          {
+            "node": "Filter for step: Create a task description",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter for step: Change task status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter for any step",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter for any step1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many rows- status table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows- status table": {
+      "main": [
+        [
+          {
+            "node": "If this is the first message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If this is the first message": {
+      "main": [
+        [
+          {
+            "node": "Update status to used for first message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is there a task in progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status to used for first message": {
+      "main": [
+        [
+          {
+            "node": "Send an opening message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is there a task in progress": {
+      "main": [
+        [
+          {
+            "node": "User selection of the action to perform",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check that there are no other steps in progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User selection of the action to perform": {
+      "main": [
+        [
+          {
+            "node": "Create a row for a new task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update deadline for the task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update status for a task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many rows- task management table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If the task status has not changed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check that there are no other steps in progress": {
+      "main": [
+        [
+          {
+            "node": "User selection of the action to perform1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter for step: Create a task description": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Create a task description\" to \"In progress\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter for step: Change task status": {
+      "main": [
+        [
+          {
+            "node": "Get many rows- task management table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter for any step": {
+      "main": [
+        [
+          {
+            "node": "Get many rows- task management table2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter for any step1": {
+      "main": [
+        [
+          {
+            "node": "Send a message: Invalid selection. Please select number 1, 2 or 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Create a task description\" to \"In progress\"": {
+      "main": [
+        [
+          {
+            "node": "Send a message : please describe the task\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Create a task description\" to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Create a deadline for the task\" to \"In progress\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Create a deadline for the task\" to \"In progress\"": {
+      "main": [
+        [
+          {
+            "node": "Send a message: Please select a date for the task to be completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update deadline for the task": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Create a deadline for the task\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Create a deadline for the task\" to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Create a task completion status\" to \"In progress\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Create a task completion status\" to \"In progress\"": {
+      "main": [
+        [
+          {
+            "node": "Send a message: Please write the task completion status (Planned, In progress, Done)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status for a task": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Create a task completion status\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Create a task completion status\" to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Send a message: The task was created successfully",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row for a new task": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Create a task description\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows- task management table": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript- Isolate the selected task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Change task statuss\" to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Choose a new status\" to \"In progress\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Choose a new status\" to \"In progress\"": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Choose a new status\" to \"In progress\"1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status  to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"First message\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update to \"null\"2": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"First message\" to \"null\"1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message: The task was created successfully": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"First message\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows- task management table1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript- returns a list of tasks to select",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript- returns a list of tasks to select": {
+      "main": [
+        [
+          {
+            "node": "Send a message: a list of tasks to select",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message: a list of tasks to select": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Change task status\" to \"In progress\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript- Isolate the selected task": {
+      "main": [
+        [
+          {
+            "node": "Send a message- The task execution status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message- The task execution status": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Change task statuss\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows- task management table2": {
+      "main": [
+        [
+          {
+            "node": "Filter: Open tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Open tasks": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript: Numbered list of open tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript: Numbered list of open tasks": {
+      "main": [
+        [
+          {
+            "node": "Send a message: Numbered list of open tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message: Numbered list of open tasks": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"First message\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message: Invalid selection. Please select number 1, 2 or 3": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"First message\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message: The task status has not changed": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Change task status\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Change task status\" to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Update status  to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If the task status has not changed": {
+      "main": [
+        [
+          {
+            "node": "Send a message: The task status has not changed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update status for a task1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status for a task1": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"Choose a new status\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"Choose a new status\" to \"null\"": {
+      "main": [
+        [
+          {
+            "node": "Update to \"null\"2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message: The updated task": {
+      "main": [
+        [
+          {
+            "node": "Update status step \"First message\" to \"null\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status step \"First message\" to \"null\"1": {
+      "main": [
+        [
+          {
+            "node": "Send a message: The updated task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "c989f198-18f1-4e0c-9ed0-c1a60c9064fa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a479fa5d47fab0d5f18a54e40f90e2c68e2bbd09fb2056bc7e556114770593e"
+  },
+  "id": "pZPpE0n32kkAB9lM",
+  "tags": []
+}

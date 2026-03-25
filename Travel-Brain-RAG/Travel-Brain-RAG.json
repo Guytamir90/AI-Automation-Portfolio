@@ -1,0 +1,1961 @@
+{
+  "name": "Travel Brain",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3296,
+        1152
+      ],
+      "id": "c612bb48-afad-4f2b-a368-7a10330c66f1",
+      "name": "Telegram Trigger",
+      "webhookId": "3982b6dd-3565-4e7e-b0df-f85a7eae4970",
+      "credentials": {
+        "telegramApi": {
+          "id": "4vIXsacUPHDpWuJq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "checkIfEvaluating"
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -1072,
+        1632
+      ],
+      "id": "af80768e-b434-4724-a3db-6c20443537d2",
+      "name": "Evaluation"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "m298zqFmndfOBHhz",
+          "mode": "list",
+          "cachedResultName": "evaluations",
+          "cachedResultUrl": "/projects/qMiOsNYvoeE4FKvv/datatables/m298zqFmndfOBHhz"
+        }
+      },
+      "type": "n8n-nodes-base.evaluationTrigger",
+      "typeVersion": 4.7,
+      "position": [
+        -3040,
+        1808
+      ],
+      "id": "084746a6-03d6-4dae-be49-a929d091d1bc",
+      "name": "When fetching a dataset row"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1a7f33b9-b80d-412e-b6f4-c1396cb10921",
+              "name": "input",
+              "value": "={{ $json.question }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2816,
+        1808
+      ],
+      "id": "631b5c3c-c82e-43d0-a7f3-d6ecd2c273fd",
+      "name": "Input Data"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-robotics-er-1.5-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        1616
+      ],
+      "id": "c324a9fd-f171-4bbb-a794-ee5c1acf315a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "setMetrics",
+        "expectedAnswer": "={{ $('When fetching a dataset row').item.json.answer }}",
+        "actualAnswer": "={{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.8,
+      "position": [
+        -656,
+        1456
+      ],
+      "id": "e714ee50-6a2e-4d11-90a4-85a6fcac5b91",
+      "name": "Evaluation - Metrics"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2368,
+        1232
+      ],
+      "id": "606a9f92-af68-4eb5-ace8-e80491044b94",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.document.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2592,
+        848
+      ],
+      "id": "6948a462-87da-491d-9c8b-7d63cd664899",
+      "name": "Get a file - PDF",
+      "webhookId": "efddcc30-7c9e-4ac1-9dfd-92c2c94a8718",
+      "credentials": {
+        "telegramApi": {
+          "id": "4vIXsacUPHDpWuJq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2592,
+        1232
+      ],
+      "id": "0b9a7b7c-59cf-45aa-8654-fa9fda5a4237",
+      "name": "Get a file- Voice",
+      "webhookId": "1dda770c-8a88-4c7c-a2c3-7a3e0b1ed84d",
+      "credentials": {
+        "telegramApi": {
+          "id": "4vIXsacUPHDpWuJq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.document.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "d4150015-96ef-432a-adee-2b0c20fe909c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Document"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cd8f6064-1a2b-4ef0-ba94-80aa4b2a46b6",
+                    "leftValue": "={{ $json.message.photo[0].file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ef009b60-9306-4624-8869-84f1849369f3",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c57f62f3-b956-4af4-984d-83edcb318f52",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Not Valid"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -3024,
+        1104
+      ],
+      "id": "946b0265-11f0-463f-bd3b-0a7650f28f04",
+      "name": "Switch- Input Type"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-robotics-er-1.5-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-robotics-er-1.5-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=\"אתה עוזר אישי לניהול טיולים. תפקידך לחלץ מידע מתוך טקסט ולהפוך אותו לנתונים מובנים למסד נתונים.\n\nחלץ את הפרטים הבאים בפורמט JSON בלבד:\n\ncategory: סוג (Hotel / Flight / Car Rental / Restaurant / Attraction / General).\n\nprovider: שם הספק.\n\nstart_date: תאריך התחלה (YYYY-MM-DD).\nend_date: תאריך סיום (YYYY-MM-DD).\n\nconfirmation_code: מספר אישור/וואוצ'ר.\n\naddress: כתובת פיזית.\n\nsummary: סיכום קצר בשורה אחת.\n\nadditional_details: כל שאר המידע המופיע במסמך (שעות, הערות מיוחדות, תנאי ביטול וכו') כדי שלא יאבד מידע.\n\nfull_content: כל הטקסט הגולמי כפי שהתקבל, ללא שינוי.\n\nהנחיות:\n\nאם פרט לא קיים, רשום null.\n\nהחזר אך ורק JSON נקי.\n\nהטקסט לניתוח:\n{{ $json.content.parts[0].text }}\nוגם:\n{{ $json.message.text }}\n\nאל תוסיף Markdown או תגיות ```, החזר רק את ה-JSON."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1664,
+        1136
+      ],
+      "id": "e76fb4f7-54af-46f6-993b-f15367571428",
+      "name": "Input Data to JSON",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[0].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2592,
+        1024
+      ],
+      "id": "d2691edf-65a9-41c5-8117-528fe58b63a4",
+      "name": "Get a file- Image",
+      "webhookId": "1dda770c-8a88-4c7c-a2c3-7a3e0b1ed84d",
+      "credentials": {
+        "telegramApi": {
+          "id": "4vIXsacUPHDpWuJq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-robotics-er-1.5-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-robotics-er-1.5-preview"
+        },
+        "text": "=משימה: חילוץ טקסט גולמי (OCR).\nהנחיות:\n\nחלץ את כל הטקסט המופיע במסמך המצורף בצורה מדויקת ומילה במילה.\n\nאל תוסיף פרשנות, אל תסכם ואל תמציא פרטים שלא מופיעים בטקסט.\n\nאם יש טבלאות, חלץ את הנתונים שבהן בצורה ברורה.\n\nאם המשתמש הוסיף כיתוב (Caption), התייחס אליו כהנחיה נוספת למיקוד החיפוש בתוך המסמך בלבד או לנתון נוסף שיש להוסיף למסמך.\n\nהכיתוב מהמשתמש (Caption):\n{{ $node[\"Telegram Trigger\"].json.message.caption }}\n\nפלט נדרש: > 1. כתוב את הכיתוב מהמשתמש (Caption) מילה במילה.\n2. מתחתיו, הוסף את כל הטקסט שחילצת מהמסמך.",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2368,
+        848
+      ],
+      "id": "6fbdbb49-e446-4a7f-b9ef-c6f12d72d496",
+      "name": "Analyze PDF",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/imagen-4.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/imagen-4.0-fast-generate-001"
+        },
+        "prompt": "=משימה: חילוץ טקסט ויזואלי (OCR) וזיהוי פרטים מתמונה.\n\nהנחיות:\n\nחלץ את כל הטקסט המופיע בתמונה המצורפת בצורה מדויקת ומילה במילה.\n\nאם מדובר בקבלה, חשבונית או אישור הזמנה, הקפד לחלץ את כל המספרים והתאריכים המופיעים בה.\n\nאל תוסיף פרשנות, אל תסכם ואל תמציא פרטים שלא קיימים בתמונה.\n\nאם המשתמש הוסיף כיתוב (Caption), התייחס אליו כמידע משלים לזיהוי התוכן בתמונה.\n\nהכיתוב מהמשתמש (Caption):\n{{ $node[\"Telegram Trigger\"].json.message.caption }}\n\nפלט נדרש: > 1. כתוב את הכיתוב מהמשתמש (Caption) מילה במילה.\n2. מתחתיו, הוסף את כל הטקסט שחולץ מהתמונה.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2368,
+        1024
+      ],
+      "id": "70881afc-d409-480d-91e0-916cce95f643",
+      "name": "Analyze Image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "acd14adc-b328-4dfe-9859-702daa7363a0",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "2edc0009-3507-46cb-922e-5207b59fd081",
+      "name": "Combine Inputs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1856,
+        1136
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "TRAVEL BRAIN",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "category",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).category : $json.content.parts[0].text.category }}"
+            },
+            {
+              "fieldId": "provider",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).provider : $json.content.parts[0].text.provider }}"
+            },
+            {
+              "fieldId": "start_date",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).start_date : $json.content.parts[0].text.start_date }}"
+            },
+            {
+              "fieldId": "end_date",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).end_date : $json.content.parts[0].text.end_date }}"
+            },
+            {
+              "fieldId": "confirmation_code",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).confirmation_code : $json.content.parts[0].text.confirmation_code }}"
+            },
+            {
+              "fieldId": "address",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).address : $json.content.parts[0].text.address }}"
+            },
+            {
+              "fieldId": "summary",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).summary : $json.content.parts[0].text.summary }}"
+            },
+            {
+              "fieldId": "additional_details",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).additional_details : $json.content.parts[0].text.additional_details }}"
+            },
+            {
+              "fieldId": "full_content",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).full_content : $json.content.parts[0].text.full_content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        1136
+      ],
+      "id": "3248f0a8-f0ac-48dc-b97a-f6d549bca22c",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "bbjqv6f8w1DuUfel",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "travel-brain",
+          "mode": "list",
+          "cachedResultName": "travel-brain"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -1088,
+        1136
+      ],
+      "id": "243f818b-f113-43f4-b776-48c3526f3a6b",
+      "name": "Pinecone Vector Store3",
+      "credentials": {
+        "pineconeApi": {
+          "id": "bV8WuRr8ZbE6o6r0",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        1344
+      ],
+      "id": "86ff7159-7655-4c11-916c-ca2f924b87f1",
+      "name": "Embeddings Google Gemini3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.full_content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -960,
+        1344
+      ],
+      "id": "d0aa718f-4141-4043-8664-e0ccdeb59460",
+      "name": "Default Data Loader1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "38f4d7c6-744d-4bbc-9a2b-9b4edd3e0023",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "תוסיף",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6c359558-f16b-4993-b527-364afd28a533",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "הוסף",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "591e06bc-25dd-4543-8351-0fa53ffa9fa5",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "להוסיף",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2368,
+        1408
+      ],
+      "id": "a7f56ec5-1aa2-4543-9551-1720be6c14f7",
+      "name": "If Add"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "travel-brain",
+          "mode": "list",
+          "cachedResultName": "travel-brain"
+        },
+        "prompt": "={{ $('Webhook1').item.json.body.description }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -1920,
+        3024
+      ],
+      "id": "3b15739c-9c0c-4cc8-b071-5cec8416f521",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "bV8WuRr8ZbE6o6r0",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1920,
+        3216
+      ],
+      "id": "bb7539f4-033a-4553-9261-f4de5147f7f1",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=# ROLE\nאתה מערכת סגורה לשליפת מידע ממסמכים בלבד. אסור לך להשתמש בידע כללי או חיצוני.\n\n# CONTEXT (המידע מהמסמכים):\n{{ $json.data.map(i => i.document.pageContent).join('\\n---\\n') }}\n\n# USER QUESTION:\n{{ $('Webhook1').item.json.body.description }}\n\n# INSTRUCTIONS:\n1. בדוק אם קיימת תשובה ישירה בתוך ה-CONTEXT (בין הגרשיים).\n2. אם התשובה לא מופיעה שם במפורש - ענה אך ורק: \"לא מצאתי מידע על כך במסמכים שלך\".\n3. אל תוסיף המלצות, אל תסביר למה לא מצאת, ואל תשתמש בידע הכללי שלך על העולם.\n4. התשובה חייבת להיות בעברית.\n\n# ANSWER:"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1440,
+        3024
+      ],
+      "id": "f67c39bd-67a4-481f-851d-818b88edf8c4",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1648,
+        3024
+      ],
+      "id": "5cee296b-fd5f-46af-852e-9afd35ba3e4c",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "travel-brain",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3248,
+        2416
+      ],
+      "id": "e60bbbd3-f10a-49a7-8323-f074e6edad06",
+      "name": "Webhook1",
+      "webhookId": "d2de3289-73b8-4fbd-8e7b-5e998cecbce4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $binary.file.fileExtension }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d4150015-96ef-432a-adee-2b0c20fe909c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Document"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cd8f6064-1a2b-4ef0-ba94-80aa4b2a46b6",
+                    "leftValue": "={{ $binary.file.mimeType }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ef009b60-9306-4624-8869-84f1849369f3",
+                    "leftValue": "={{ $binary.file.mimeType }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c57f62f3-b956-4af4-984d-83edcb318f52",
+                    "leftValue": "={{ $json.body.description }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Not Valid"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -3008,
+        2368
+      ],
+      "id": "360c089e-e1b4-427c-99d1-c796e5c0bd37",
+      "name": "Switch- Input Type1"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2352,
+        2544
+      ],
+      "id": "84ef9bd2-dc82-43ab-93a6-247f61d76ab0",
+      "name": "Transcribe a recording1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "prompt": "=משימה: חילוץ טקסט ויזואלי (OCR) וזיהוי פרטים מתמונה.\n\nהנחיות:\n\n1. חלץ את כל הטקסט המופיע בתמונה המצורפת בצורה מדויקת ומילה במילה.\n\n2. אם מדובר בקבלה, חשבונית או אישור הזמנה, הקפד לחלץ את כל המספרים והתאריכים המופיעים בה.\n\n3. אל תוסיף פרשנות, אל תסכם ואל תמציא פרטים שלא קיימים בתמונה.\n\n4. אם המשתמש הוסיף כיתוב (Caption), התייחס אליו כמידע משלים לזיהוי התוכן בתמונה.\n\nהכיתוב מהמשתמש (Caption):\n{{ $json.body?.description || \"לא צורף כיתוב\" }}\n\nפלט נדרש:\n1. כתוב את הכיתוב מהמשתמש (Caption) מילה במילה.\n2. מתחתיו, הוסף את כל הטקסט שחולץ מהתמונה.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2352,
+        2336
+      ],
+      "id": "5b59fb03-59db-45c8-b223-2f7e2aea7d8e",
+      "name": "Analyze Image1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "38f4d7c6-744d-4bbc-9a2b-9b4edd3e0023",
+              "leftValue": "={{ $('Webhook1').item.json.body.description }}",
+              "rightValue": "תוסיף",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6c359558-f16b-4993-b527-364afd28a533",
+              "leftValue": "={{ $('Webhook1').item.json.body.description }}",
+              "rightValue": "הוסף",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "591e06bc-25dd-4543-8351-0fa53ffa9fa5",
+              "leftValue": "={{ $('Webhook1').item.json.body.description }}",
+              "rightValue": "להוסיף",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2352,
+        2720
+      ],
+      "id": "6a20457a-dc60-4ff5-b97a-fb3d70a60c6e",
+      "name": "If Add1"
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=משימה: חילוץ טקסט גולמי (OCR).\nהנחיות:\n\n1. חלץ את כל הטקסט המופיע במסמך המצורף בצורה מדויקת ומילה במילה.\n\n2. אל תוסיף פרשנות, אל תסכם ואל תמציא פרטים שלא מופיעים בטקסט.\n\n3. אם יש טבלאות, חלץ את הנתונים שבהן בצורה ברורה.\n\n4. אם המשתמש הוסיף כיתוב (Caption/Description), התייחס אליו כהנחיה נוספת למיקוד החיפוש בתוך המסמך בלבד או לנתון נוסף שיש להוסיף למסמך.\n\nהכיתוב מהמשתמש (Caption):\n{{ $json.body?.description || \"לא צורף כיתוב\" }}\n\nפלט נדרש:\n1. כתוב את הכיתוב מהמשתמש (Caption) מילה במילה.\n2. מתחתיו, הוסף את כל הטקסט שחילצת מהמסמך.",
+        "inputType": "binary",
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2352,
+        2176
+      ],
+      "id": "69f42413-f85b-4e88-83c7-794a93100e90",
+      "name": "Analyze PDF1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=הפרטים נשמרו בהצלחה",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -704,
+        1136
+      ],
+      "id": "87045c33-9364-46ef-a3d0-9dc21317da86",
+      "name": "Text Message- Not Valid Inout2",
+      "webhookId": "a3dbe6b2-804a-4715-a72a-5ab7b0c7de5e",
+      "credentials": {
+        "telegramApi": {
+          "id": "4vIXsacUPHDpWuJq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseKey": "התוכנה אינה תומכת קובץ מסוג זה. ניתן להכניס PDF, טקסט, שמע, או תמונה בלבד."
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -2736,
+        2816
+      ],
+      "id": "4cdea518-7cea-4e2f-a5a1-23a54618a4e0",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "=\"{{ $json.content.parts[0].text }}\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1040,
+        3024
+      ],
+      "id": "8cd85cfc-066c-45a1-a133-b1cab9c4d75d",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-robotics-er-1.5-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-robotics-er-1.5-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=\"אתה עוזר אישי לניהול טיולים. תפקידך לחלץ מידע מתוך טקסט ולהפוך אותו לנתונים מובנים למסד נתונים.\n\nחלץ את הפרטים הבאים בפורמט JSON בלבד:\n\ncategory: סוג (Hotel / Flight / Car Rental / Restaurant / Attraction / General).\n\nprovider: שם הספק.\n\nstart_date: תאריך התחלה (YYYY-MM-DD).\nend_date: תאריך סיום (YYYY-MM-DD).\n\nconfirmation_code: מספר אישור/וואוצ'ר.\n\naddress: כתובת פיזית.\n\nsummary: סיכום קצר בשורה אחת.\n\nadditional_details: כל שאר המידע המופיע במסמך (שעות, הערות מיוחדות, תנאי ביטול וכו') כדי שלא יאבד מידע.\n\nfull_content: כל הטקסט הגולמי כפי שהתקבל, ללא שינוי.\n\nהנחיות:\n\nאם פרט לא קיים, רשום null.\n\nהחזר אך ורק JSON נקי.\n\nהטקסט לניתוח:\n{{ $json.content.parts[0].text }}\n\nאל תוסיף Markdown או תגיות ```, החזר רק את ה-JSON."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1744,
+        2432
+      ],
+      "id": "9924c363-7364-4144-953d-b44ea095f87c",
+      "name": "Input Data to JSON1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "acd14adc-b328-4dfe-9859-702daa7363a0",
+              "name": "body.description",
+              "value": "={{ $json.body.description }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "1f55e17b-a8bc-4382-b9c4-4587dfff9db0",
+      "name": "Combine Inputs1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1936,
+        2432
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "TRAVEL BRAIN",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "category",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).category : $json.content.parts[0].text.category }}"
+            },
+            {
+              "fieldId": "provider",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).provider : $json.content.parts[0].text.provider }}"
+            },
+            {
+              "fieldId": "start_date",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).start_date : $json.content.parts[0].text.start_date }}"
+            },
+            {
+              "fieldId": "end_date",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).end_date : $json.content.parts[0].text.end_date }}"
+            },
+            {
+              "fieldId": "confirmation_code",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).confirmation_code : $json.content.parts[0].text.confirmation_code }}"
+            },
+            {
+              "fieldId": "address",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).address : $json.content.parts[0].text.address }}"
+            },
+            {
+              "fieldId": "summary",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).summary : $json.content.parts[0].text.summary }}"
+            },
+            {
+              "fieldId": "additional_details",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).additional_details : $json.content.parts[0].text.additional_details }}"
+            },
+            {
+              "fieldId": "full_content",
+              "fieldValue": "={{ typeof $json.content.parts[0].text === 'string' ? JSON.parse($json.content.parts[0].text.replace(/```json|```/g, \"\").trim()).full_content : $json.content.parts[0].text.full_content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        2432
+      ],
+      "id": "0dfe6352-0148-454b-8ac4-870ac1ee6d99",
+      "name": "Create a row1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "bbjqv6f8w1DuUfel",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "travel-brain",
+          "mode": "list",
+          "cachedResultName": "travel-brain"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -1040,
+        2432
+      ],
+      "id": "2b136782-3dd2-45c5-885b-4fec23ba2891",
+      "name": "Pinecone Vector Store4",
+      "credentials": {
+        "pineconeApi": {
+          "id": "bV8WuRr8ZbE6o6r0",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        2640
+      ],
+      "id": "638a08e7-6d88-4672-974b-1846b2b83243",
+      "name": "Embeddings Google Gemini4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.full_content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -912,
+        2640
+      ],
+      "id": "afe5e3ad-f974-4f53-b406-2653bee5bfb8",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -624,
+        2432
+      ],
+      "id": "9a456eb4-d7e5-41d5-822c-29286a079550",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "travel-brain",
+          "mode": "list",
+          "cachedResultName": "travel-brain"
+        },
+        "prompt": "={{ $json.input || $json.message?.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -1872,
+        1632
+      ],
+      "id": "532ebb1c-700f-428b-ad47-7b539ba7f676",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "bV8WuRr8ZbE6o6r0",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1872,
+        1808
+      ],
+      "id": "d85f05b2-1f50-4229-b4ac-4c26685e314f",
+      "name": "Embeddings Google Gemini1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-robotics-er-1.5-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-robotics-er-1.5-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=אתה עוזר אישי לטיולים.\n\nהמשתמש שאל:{{ $('Merge').item.json.input }}\n\nהמידע שנמצא:\n{{ $json.data.map(item => item.document.pageContent).join('\\n\\n') }}\nאם המידע לא נמצא במסמכים שסופקו, אמור בדיוק: 'לא מצאתי מידע על כך במסמכים שלך'. אל תמציא מידע.\n\nענה בעברית בצורה ברורה וקצרה."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1392,
+        1632
+      ],
+      "id": "68cab11a-1715-4b04-bce0-60cf7d78bd89",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ffeCtdAZp0VLd6Iz",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.content.parts[0].text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -816,
+        1648
+      ],
+      "id": "d3152563-2149-401c-8f1e-a52b9dc0e4b5",
+      "name": "Send a text message1",
+      "webhookId": "b260d04a-5628-449a-b213-3b80812f58e0",
+      "credentials": {
+        "telegramApi": {
+          "id": "4vIXsacUPHDpWuJq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1568,
+        1632
+      ],
+      "id": "e5689dd4-0c58-404d-96d9-f8f90ee259f3",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2048,
+        1632
+      ],
+      "id": "850cc0b1-874d-4ef1-9c96-34e156262406",
+      "name": "Merge",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "777a4b0f-5eea-4c53-8fdf-e34b2acb8186",
+              "name": "input",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2208,
+        1536
+      ],
+      "id": "6475dca8-5aa3-428b-b5e1-062f3a7f81e0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8440220530:AAGHqWOWR1I7oQ7hM0tgLN8mPbYOxA9iaCA/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $json.message.from.id }}"
+            },
+            {
+              "name": "text",
+              "value": "התוכנה אינה תומכת קובץ מסוג זה. ניתן להכניס PDF, טקסט, שמע, או תמונה בלבד."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -2800,
+        1472
+      ],
+      "id": "26022f8b-c0e6-4649-9f34-352ee160c0d2",
+      "name": "HTTP Request-  Not Valid Inout"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch- Input Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation": {
+      "main": [
+        [
+          {
+            "node": "Evaluation - Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When fetching a dataset row": {
+      "main": [
+        [
+          {
+            "node": "Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Evaluation - Metrics",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file - PDF": {
+      "main": [
+        [
+          {
+            "node": "Analyze PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file- Voice": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch- Input Type": {
+      "main": [
+        [
+          {
+            "node": "Get a file - PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file- Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file- Voice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If Add",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request-  Not Valid Inout",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file- Image": {
+      "main": [
+        [
+          {
+            "node": "Analyze Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze PDF": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Image": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data to JSON": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Inputs": {
+      "main": [
+        [
+          {
+            "node": "Input Data to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini3": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store3",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader1": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store3",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Add": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Switch- Input Type1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording1": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Image1": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Add1": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch- Input Type1": {
+      "main": [
+        [
+          {
+            "node": "Analyze PDF1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze Image1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transcribe a recording1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If Add1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze PDF1": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store3": {
+      "main": [
+        [
+          {
+            "node": "Text Message- Not Valid Inout2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data to JSON1": {
+      "main": [
+        [
+          {
+            "node": "Create a row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Inputs1": {
+      "main": [
+        [
+          {
+            "node": "Input Data to JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row1": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini4": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store4",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store4",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Evaluation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request-  Not Valid Inout": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d506db12-ee37-48d4-a05b-254e87db10f3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f97018fc42ade1ab80d508049f6dd2184de5a919bdbae3ede170c413c6e79f6d"
+  },
+  "id": "oRIxHhLrjRb8VWfk",
+  "tags": []
+}

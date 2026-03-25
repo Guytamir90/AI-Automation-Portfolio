@@ -1,0 +1,437 @@
+{
+  "name": "Mini-Project: API-Driven Telegram Bot Development",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1344,
+        1728
+      ],
+      "id": "087934c9-7cff-40f4-8d94-b98bfb48d60b",
+      "name": "Telegram Trigger",
+      "webhookId": "828d95e3-f886-4f70-81b8-d7f737dcb477",
+      "credentials": {
+        "telegramApi": {
+          "id": "VqseLEfvvbQEbt0d",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://dogapi.dog/api/v2/breeds",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1104,
+        1728
+      ],
+      "id": "bf506c03-0764-4b28-b86b-eac104409de3",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8fed6c12-28e9-47a5-804c-498a4818904d",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -912,
+        1728
+      ],
+      "id": "b3f977d8-867b-4aab-8ecc-300ee6d25943",
+      "name": "edit"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        1728
+      ],
+      "id": "f90ab6a4-e076-444b-b009-1653ea1687c9",
+      "name": "split"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "94697be8-628a-4124-8336-68cb911a2857",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text.length }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -512,
+        1728
+      ],
+      "id": "ad62fd90-6018-4d28-9370-14daab240438",
+      "name": "If this is only 1 letter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "83b19daa-c5ed-4cfc-b747-91c756af5091",
+              "leftValue": "={{ $json.attributes.name }}",
+              "rightValue": "={{ $('Telegram Trigger').item.json.message.text.toUpperCase() }}",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -256,
+        1712
+      ],
+      "id": "500c3272-6101-475e-a4a1-d19036271c7e",
+      "name": "Filter by first letter"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "attributes.name"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        1712
+      ],
+      "id": "1758b238-a85f-4b7c-9909-7c73a07f5302",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Here is a list of breeds starting with the letter you chose. To see details about a specific breed, please type its full name.\n{{ $json.name.map((item, index) => (index + 1) + \". \" + item).join('\\n') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        1712
+      ],
+      "id": "2c9d3c9d-7f74-42f6-8d7a-574d9aa65dde",
+      "name": "list of dog breed",
+      "webhookId": "53e452c3-bbaa-443c-b398-fd3267ebf7ca",
+      "credentials": {
+        "telegramApi": {
+          "id": "ltFpC5NQ7CpoSTsL",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "83b19daa-c5ed-4cfc-b747-91c756af5091",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "rightValue": "={{ $json.attributes.name }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -320,
+        1888
+      ],
+      "id": "d000b7cb-c694-4c2c-b6c6-0b1ac4d687d4",
+      "name": "Filter by name",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5c21c903-95c2-4f31-881c-f093a451993f",
+              "leftValue": "={{ $json.attributes.name }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -112,
+        1888
+      ],
+      "id": "20d94bd0-1c0f-4a06-9e6e-7ba66eb85545",
+      "name": "if there is a match"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Dog Breed Details:\nName: {{ $json.attributes.name }}\nDescription: {{ $json.attributes.description }}\nLife Expectancy: {{ $json.attributes.life.min }} - {{ $json.attributes.life.max }} years\nmale weight: {{ $json.attributes.male_weight.min}} - {{ $json.attributes.male_weight.max }} kg\nfemale weight: {{ $json.attributes.female_weight.min}} - {{ $json.attributes.female_weight.max }} kg\nhypoallergenic: {{ $json.attributes.hypoallergenic }}\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        1872
+      ],
+      "id": "7dad3a7f-c7c5-4c0c-882a-2a1fb21ea97d",
+      "name": "dog breed details",
+      "webhookId": "53e452c3-bbaa-443c-b398-fd3267ebf7ca",
+      "credentials": {
+        "telegramApi": {
+          "id": "ltFpC5NQ7CpoSTsL",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{\"Please enter a dog breed name or a single letter to get details\"}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        2080
+      ],
+      "id": "6b7f93bd-bd2e-4d86-bc69-f8249745e01e",
+      "name": "Select first letter or the breed name",
+      "webhookId": "53e452c3-bbaa-443c-b398-fd3267ebf7ca",
+      "credentials": {
+        "telegramApi": {
+          "id": "ltFpC5NQ7CpoSTsL",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "edit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "edit": {
+      "main": [
+        [
+          {
+            "node": "split",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split": {
+      "main": [
+        [
+          {
+            "node": "If this is only 1 letter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If this is only 1 letter": {
+      "main": [
+        [
+          {
+            "node": "Filter by first letter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter by name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by first letter": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "list of dog breed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by name": {
+      "main": [
+        [
+          {
+            "node": "if there is a match",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if there is a match": {
+      "main": [
+        [
+          {
+            "node": "dog breed details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Select first letter or the breed name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "970fd18f-1ffb-4952-85cd-a5c0e3196bd8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a479fa5d47fab0d5f18a54e40f90e2c68e2bbd09fb2056bc7e556114770593e"
+  },
+  "id": "s7vzuLlchWN8nLR6",
+  "tags": []
+}
