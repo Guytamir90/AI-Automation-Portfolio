@@ -1,0 +1,14 @@
+# Travel-Brain: AI Travel Assistant (RAG)
+
+An intelligent travel assistant that provides context-aware recommendations using a Retrieval-Augmented Generation (RAG) architecture.
+
+### Key Features
+* **RAG Architecture:** Reduces AI hallucinations by retrieving data from a private knowledge base before generating answers.
+* **Vector Database:** Full integration with **Pinecone** for high-speed semantic search and document embedding.
+* **Smart Retrieval:** Uses **Gemini AI** to process user queries and match them with relevant travel data.
+* **Automated Upsert:** Workflow for converting raw text into vector embeddings and storing them automatically.
+
+### Tech Stack
+* n8n (Automation)
+* Gemini AI / OpenAI
+* Pinecone (Vector DB)
