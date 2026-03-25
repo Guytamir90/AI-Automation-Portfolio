@@ -1,12 +1,12 @@
 # Telegram Task Manager Bot
 
-A mobile-first task management system operated entirely via a Telegram Bot interface with full database persistence.
+A robust, bot-driven task management system with full database integration and automated data completion.
 
 ### Key Features
-* **Full CRUD via Chat:** Create, Read, Update, and Delete tasks using simple Telegram commands.
-* **Real-time Persistence:** Integrated with **Supabase (PostgreSQL)** for reliable and fast data storage.
-* **State Management:** Logic to handle user sessions and flow within the Telegram chat.
-* **Instance Logic:** Designed to handle multiple requests and maintain data integrity per user.
+* **Full CRUD via Telegram:** Manage your entire task list (Create, Read, Update, Delete) through a chat interface.
+* **Supabase Integration:** Uses **Supabase** as the primary backend for persistent, real-time data storage.
+* **Smart Auto-Completion:** The bot intelligently fills in missing task details (like default priority or status) if not explicitly provided by the user.
+* **Session Management:** Handles complex user flows and command parsing within the n8n environment.
 
 ### Tech Stack
 * n8n
