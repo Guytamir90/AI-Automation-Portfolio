@@ -1,14 +1,17 @@
-# Travel-Brain: AI Travel Assistant (RAG)
+# Travel-Brain: Multi-Interface AI Agent (RAG)
 
-An intelligent travel assistant that provides context-aware recommendations using a Retrieval-Augmented Generation (RAG) architecture.
+An advanced AI travel ecosystem featuring dual-interface access and multi-modal data processing.
 
 ### Key Features
-* **RAG Architecture:** Reduces AI hallucinations by retrieving data from a private knowledge base before generating answers.
-* **Vector Database:** Full integration with **Pinecone** for high-speed semantic search and document embedding.
-* **Smart Retrieval:** Uses **Gemini AI** to process user queries and match them with relevant travel data.
-* **Automated Upsert:** Workflow for converting raw text into vector embeddings and storing them automatically.
+* **Dual Interface:** Accessible via both a **Web Interface** and a **Telegram Bot**, providing a seamless user experience across devices.
+* **Multi-Modal AI Agents:** Capable of processing and analyzing diverse data inputs, including **Voice notes (Audio), Images, and Documents (PDF/Text)**.
+* **Advanced RAG Architecture:** Utilizes **Pinecone (Vector DB)** for semantic search, ensuring the AI agent retrieves accurate, real-time travel information.
+* **Database Persistence:** All user interactions and travel plans are stored and managed using **Supabase (PostgreSQL)**.
+* **Intelligent Routing:** n8n workflow that routes queries based on input type (e.g., transcribing audio before processing with LLM).
 
 ### Tech Stack
-* n8n (Automation)
-* Gemini AI / OpenAI
-* Pinecone (Vector DB)
+* n8n (Orchestration)
+* Gemini AI / OpenAI (LLMs & Vision)
+* Pinecone (Vector Database)
+* Supabase (Relational Database)
+* Telegram Bot API
