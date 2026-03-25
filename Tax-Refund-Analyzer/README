@@ -1,14 +1,13 @@
 # Tax-Refund-Analyzer (Vision AI)
 
-Automated tool for parsing Israeli Tax Form 106 and analyzing eligibility for tax refunds using Computer Vision.
+Automated financial analysis tool utilizing AI Vision to process official documents.
 
 ### Key Features
-* **Vision AI Processing:** Utilizes **Gemini Vision AI** to extract structured data from PDF/Image formats of financial documents.
-* **Financial Logic:** Intelligent analysis of tax fields, income reports, and eligibility criteria.
-* **Structured Output:** Converts messy document data into a clean, actionable JSON/Table format.
-* **Automated Workflow:** From document upload to final refund estimation in seconds.
+* **Multi-Format Parsing:** Leverages **Gemini Vision AI** to analyze and extract data from **Images and PDF files** (specifically Israeli Form 106).
+* **Automated Data Structuring:** Converts visual data into structured records stored in **Supabase**.
+* **Financial Intelligence:** AI-driven logic to identify tax refund eligibility based on extracted parameters.
 
 ### Tech Stack
 * n8n
 * Gemini Vision AI
-* Structured Data Parsing
+* Supabase
