@@ -1,0 +1,14 @@
+# Dog-Breed-Insight (API Automation)
+
+A specialized data-processing workflow that aggregates information from public REST APIs.
+
+### Key Features
+* **API Aggregation:** Fetches and combines data from multiple endpoints using complex HTTP Request nodes.
+* **Data Transformation:** Uses n8n expressions and JSON logic to filter and format raw data into user-friendly insights.
+* **Error Handling:** Robust logic to handle API timeouts or missing data fields.
+* **Automated Reporting:** Generates structured responses based on dynamic user queries.
+
+### Tech Stack
+* n8n
+* RESTful APIs
+* JSON Data Transformation
